@@ -1,0 +1,3 @@
+# Log levels
+# logging.level.org.springframework.web: DEBUG
+logging.level.org.springframework.web.servlet.DispatcherServlet: DEBUG

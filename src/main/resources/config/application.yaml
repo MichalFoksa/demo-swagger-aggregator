@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: swagger-aggregator
+
+# Display application name in Actuator's info endpoint 
+info.app.name: ${spring.application.name}
+
+management:
+  # To change which endpoints are exposed, use 
+  # management.endpoints.web.exposure.include and  
+  # management.endpoints.web.exposure.exclude properties.
+  endpoints:
+    web:
+      exposure:
+        # Expose all actuator endpoints
+        include: '*'
+
+# Log levels
+logging.level: INFO
+logging.level.org.springframework: INFO
+logging.level.org.apache: WARN
+logging.level.org.apache.tomcat: INFO
+logging.level.org.hibernate: INFO
+logging.level.org.thymeleaf: INFO
+logging.level.net.michalfoksa: DEBUG
