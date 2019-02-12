@@ -4,9 +4,10 @@ spring:
 
   cloud:
     kubernetes:
+      # Kubernetes discovery client
       discovery:
-        # Kubernetes discovery client is enbled by default
-        enabled=true
+        # Enabled by default
+        enabled: true
 
 # Display application name in Actuator's info endpoint 
 info.app.name: ${spring.application.name}
