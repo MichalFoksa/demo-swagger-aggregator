@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ import net.michalfoksa.demo.swagger.aggregator.context.RuntimeContext;
 @Controller
 @RequestMapping(path="/")
 public class ApplicationController {
+
+    Logger log = LoggerFactory.getLogger(ApplicationController.class);
 
     @Inject
     private RuntimeContext runtimeContext;
@@ -62,6 +66,7 @@ public class ApplicationController {
         } catch (Exception e) {
             sb.append(e.getMessage());
             sb.append(e.getCause() != null ? "<br/>\n" + e.getCause().getMessage() : "");
+            log.error("Error", e);
         }
         sb.append("</tr>\n</table>\n");
 
