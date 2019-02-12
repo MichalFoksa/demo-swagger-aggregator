@@ -5,8 +5,7 @@ pipeline {
   environment {
     ORG = 'michalfoksa'
     APP_NAME = 'demo-swagger-aggregator'
-    // Workaround for "CredentialNotFoundException: jenkins-x-chartmuseum" error.
-    // CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
   }
   stages {
     stage('CI Build and push snapshot') {
