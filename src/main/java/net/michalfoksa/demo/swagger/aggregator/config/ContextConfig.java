@@ -39,6 +39,9 @@ public class ContextConfig {
     @Value("${POD_NAMESPACE:#{null}}")
     private String podNamespace;
 
+    @Value("${POD_SERVICE_ACCOUNT:#{null}}")
+    private String podServiceAccount;
+
     @Value("${NODE_NAME:#{null}}")
     private String nodeName;
 
@@ -46,7 +49,7 @@ public class ContextConfig {
     public RuntimeContext runtimeContext() {
         KubernetesRuntimeContext rt = new KubernetesRuntimeContext().application(application)
                 .hostname(podName != null ? podName : hostname).ip(podIp != null ? podIp : ipAddress)
-                .podNamespace(podNamespace).nodeName(nodeName);
+                .podNamespace(podNamespace).podServiceAccount(podServiceAccount).nodeName(nodeName);
 
         log.debug("Runtime context [runtimeContext={}]", rt);
 

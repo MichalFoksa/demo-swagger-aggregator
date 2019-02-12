@@ -11,6 +11,7 @@ public class KubernetesRuntimeContext implements RuntimeContext {
     private String podIp;
     private String podName;
     private String podNamespace;
+    private String podServiceAccount;
     private String nodeName;
 
     @Override
@@ -81,6 +82,19 @@ public class KubernetesRuntimeContext implements RuntimeContext {
         return this;
     }
 
+    public String getPodServiceAccount() {
+        return podServiceAccount;
+    }
+
+    public void setPodServiceAccount(String podServiceAccount) {
+        this.podServiceAccount = podServiceAccount;
+    }
+
+    public KubernetesRuntimeContext podServiceAccount(String podServiceAccount) {
+        this.podServiceAccount = podServiceAccount;
+        return this;
+    }
+
     @Override
     public Map<String, Object> getAllFieldsMap() {
         // Collect all non null class properties into map.
@@ -111,8 +125,9 @@ public class KubernetesRuntimeContext implements RuntimeContext {
 
     @Override
     public String toString() {
-        return "KubernetesRuntimeContext [application=" + application + ", podIp=" + podIp + ", podName="
-                + podName + ", podNamespace=" + podNamespace + ", nodeName=" + nodeName + "]";
+        return "KubernetesRuntimeContext [application=" + application + ", podIp=" + podIp + ", podName=" + podName
+                + ", podNamespace=" + podNamespace + ", podServiceAccount=" + podServiceAccount + ", nodeName="
+                + nodeName + "]";
     }
 
 }
