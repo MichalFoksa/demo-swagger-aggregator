@@ -1,4 +1,4 @@
-package net.michalfoksa.demos.swagger.aggregator;
+package net.michalfoksa.demo.swagger.aggregator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
