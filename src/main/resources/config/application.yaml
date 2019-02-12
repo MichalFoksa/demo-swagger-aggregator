@@ -2,6 +2,12 @@ spring:
   application:
     name: swagger-aggregator
 
+  cloud:
+    kubernetes:
+      discovery:
+        # Kubernetes discovery client is enbled by default
+        enabled=true
+
 # Display application name in Actuator's info endpoint 
 info.app.name: ${spring.application.name}
 
