@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import net.michalfoksa.demo.swagger.aggregator.context.RuntimeContext;
 
 @Controller
-@RequestMapping(path="/")
-public class ApplicationController {
+@RequestMapping(path = "/discovery")
+public class DiscoveryController {
 
-    Logger log = LoggerFactory.getLogger(ApplicationController.class);
+    Logger log = LoggerFactory.getLogger(DiscoveryController.class);
 
     @Inject
     private RuntimeContext runtimeContext;
