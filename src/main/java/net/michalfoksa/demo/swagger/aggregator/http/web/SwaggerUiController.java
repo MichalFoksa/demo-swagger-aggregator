@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SwaggerUiController {
     @RequestMapping(value = "/api")
     public String index() {
-        System.out.println("swagger-ui.html");
         return "redirect:swagger-ui.html";
     }
 }
