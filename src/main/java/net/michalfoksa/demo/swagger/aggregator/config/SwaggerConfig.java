@@ -16,7 +16,7 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${documentation.swagger.v2.defaultpath:#{/api-docs}}")
+    @Value("${documentation.swagger.v2.defaultpath:'/api-docs'}")
     private String defaulthApiDocsPath;
 
     @Primary

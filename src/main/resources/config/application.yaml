@@ -22,6 +22,9 @@ management:
         # Expose all actuator endpoints
         include: '*'
 
+# API documentation path where aplication defaults when path is not in service metadata
+documentation.swagger.v2.defaultpath: /api-docs
+
 # Log levels
 logging.level: INFO
 logging.level.org.springframework: INFO
