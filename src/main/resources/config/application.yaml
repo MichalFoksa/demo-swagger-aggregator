@@ -1,3 +1,6 @@
+################################################################################
+###                     Dependency configuration                             ###
+################################################################################
 spring:
   application:
     name: swagger-aggregator
@@ -22,10 +25,28 @@ management:
         # Expose all actuator endpoints
         include: '*'
 
+################################################################################
+###                      Custom directives                                   ###
+################################################################################
 # API documentation path where aplication defaults when path is not in service metadata
 documentation.swagger.v2.defaultpath: /api-docs
 
-# Log levels
+
+aggregator:
+  documentation:
+    # Default path to Swagger API documentation in JSON format. On client side 
+    # it is configured by: 
+    #    documentation.swagger.v2.defaultpath and defualts to /v2/api-docs   
+    # Aplication defaults to this when path is not in service metadata.
+    # Default value: /v2/api-docs
+    swagger.v2.defaultpath: /api-docs
+
+    # Path to 
+    api-docs-proxy.path: /api-docs/proxy
+
+################################################################################
+###                       Logging configuration                              ###
+################################################################################
 logging.level: INFO
 logging.level.org.springframework: INFO
 logging.level.org.apache: WARN
