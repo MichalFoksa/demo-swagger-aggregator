@@ -42,25 +42,25 @@ public class DiscoveryController {
         sb.append("<table rules=\"rows\">\n<tr>");
         try {
             String servicesTable =
-                    discoveryClient.getServices().stream().map(
-                            name -> "<tr><td>Service:</td><th colspan=\"2\">" + name + "</th></tr>\n"
-                                    + discoveryClient.getInstances(name).stream().map(instance ->
+                    discoveryClient.getServices().stream().sorted(String::compareTo)
+                    .map(name -> "<tr><td>Service:</td><th colspan=\"2\">" + name + "</th></tr>\n"
+                            + discoveryClient.getInstances(name).stream().map(instance ->
 
-                                    "<tr><td> instanceId :</td> <td>" + instance.getInstanceId() + "</td><td/></tr>\n"
-                                    + "<tr><td> scheme :</td> <td>" + instance.getScheme() + "</td><td/></tr>\n"
-                                    + "<tr><td> host :</td> <td>" + instance.getHost() + "</td><td/></tr>\n"
-                                    + "<tr><td> port :</td> <td>" + instance.getPort() + "</td><td/></tr>\n"
-                                    + "<tr><td> uri :</td> <td>" + instance.getUri() + "</td><td/></tr>\n"
-                                    // Metadata
-                                    + "<tr><th>metadata</th><th colspan=\"2\"> instance " + instance.getInstanceId()
-                                    + " </th></tr>\n"
-                                    + instance.getMetadata().entrySet().stream()
-                                    .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
-                                    .map(entry -> "<td/><td>" + entry.getKey() + ":</td> <td>"
-                                            + entry.getValue().toString() + "</td>")
-                                    .collect(Collectors.joining("</tr>\n<tr>"))
+                            "<tr><td> instanceId :</td> <td>" + instance.getInstanceId() + "</td><td/></tr>\n"
+                            + "<tr><td> scheme :</td> <td>" + instance.getScheme() + "</td><td/></tr>\n"
+                            + "<tr><td> host :</td> <td>" + instance.getHost() + "</td><td/></tr>\n"
+                            + "<tr><td> port :</td> <td>" + instance.getPort() + "</td><td/></tr>\n"
+                            + "<tr><td> uri :</td> <td>" + instance.getUri() + "</td><td/></tr>\n"
+                            // Metadata
+                            + "<tr><th>metadata</th><th colspan=\"2\"> instance " + instance.getInstanceId()
+                            + " </th></tr>\n"
+                            + instance.getMetadata().entrySet().stream()
+                            .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
+                            .map(entry -> "<td/><td>" + entry.getKey() + ":</td> <td>"
+                                    + entry.getValue().toString() + "</td>")
+                            .collect(Collectors.joining("</tr>\n<tr>"))
 
-                                            ).collect(Collectors.joining("</tr>\n<tr>")))
+                                    ).collect(Collectors.joining("</tr>\n<tr>")))
                     .collect(Collectors.joining("</tr>\n<tr>"));
             sb.append(servicesTable);
         } catch (Exception e) {
