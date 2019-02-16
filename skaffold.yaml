@@ -7,7 +7,7 @@ build:
     docker: {}
   tagPolicy:
     envTemplate:
-      template: '{{.DOCKER_REGISTRY}}/michalfoksa/demo-swagger-aggregator:{{.VERSION}}'
+      template: '{{.DOCKER_REGISTRY}}/michalfoksa/swagger-aggregator:{{.VERSION}}'
   local: {}
 deploy:
   kubectl: {}
@@ -18,13 +18,13 @@ profiles:
     - docker: {}
     tagPolicy:
       envTemplate:
-        template: '{{.DOCKER_REGISTRY}}/michalfoksa/demo-swagger-aggregator:{{.DIGEST_HEX}}'
+        template: '{{.DOCKER_REGISTRY}}/michalfoksa/swagger-aggregator:{{.DIGEST_HEX}}'
     local: {}
   deploy:
     helm:
       releases:
-      - name: demo-swagger-aggregator
-        chartPath: charts/demo-swagger-aggregator
+      - name: swagger-aggregator
+        chartPath: charts/swagger-aggregator
         setValueTemplates:
-          image.repository: '{{.DOCKER_REGISTRY}}/michalfoksa/demo-swagger-aggregator'
+          image.repository: '{{.DOCKER_REGISTRY}}/michalfoksa/swagger-aggregator'
           image.tag: '{{.DIGEST_HEX}}'

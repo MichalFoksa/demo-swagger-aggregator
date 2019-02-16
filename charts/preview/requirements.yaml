@@ -12,5 +12,5 @@ dependencies:
   # !! "alias: preview" must be last entry in dependencies array !!
   # !! Place custom dependencies above !!
 - alias: preview
-  name: demo-swagger-aggregator
-  repository: file://../demo-swagger-aggregator
+  name: swagger-aggregator
+  repository: file://../swagger-aggregator

@@ -4,7 +4,7 @@ pipeline {
   }
   environment {
     ORG = 'michalfoksa'
-    APP_NAME = 'demo-swagger-aggregator'
+    APP_NAME = 'swagger-aggregator'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
   }
   stages {
@@ -60,7 +60,7 @@ pipeline {
       }
       steps {
         container('maven') {
-          dir('charts/demo-swagger-aggregator') {
+          dir('charts/swagger-aggregator') {
             sh "jx step changelog --version v\$(cat ../../VERSION)"
 
             // release the helm chart
