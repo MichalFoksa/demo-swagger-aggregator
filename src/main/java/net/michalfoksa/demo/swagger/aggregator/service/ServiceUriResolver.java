@@ -1,12 +1,14 @@
 package net.michalfoksa.demo.swagger.aggregator.service;
 
+import java.net.URI;
+
 /***
  * Abstracts mechanism to retrieve service URL by service name.
  *
  * @author Michal Foksa
  *
  */
-public interface UrlResolver {
+public interface ServiceUriResolver {
 
     /***
      * Create service URI from service name.
@@ -14,6 +16,6 @@ public interface UrlResolver {
      * @param serviceName
      * @return service URL
      */
-    String getUrl(String serviceName);
+    URI getUri(String serviceName);
 
 }

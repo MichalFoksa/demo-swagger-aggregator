@@ -30,7 +30,7 @@ public class SwaggerResourceService implements InitializingBean {
     private String proxyControlerPath;
 
     @Inject
-    private UrlResolver urlResolver;
+    private ServiceUriResolver serviceUriResolver;
 
     // Map of serviceId to api-docs URI
     private Map<String, URI> service2ApiDocsUri = new HashMap<>();
@@ -77,8 +77,8 @@ public class SwaggerResourceService implements InitializingBean {
     }
 
     private URI createApiDocsUri(String serviceName) {
-        String serviceUrl = urlResolver.getUrl(serviceName);
-        return URI.create(serviceUrl + (serviceUrl.endsWith("/") ? "" : "/") + defaulthApiDocsPath);
+        URI uri = serviceUriResolver.getUri(serviceName);
+        return URI.create(uri + (uri.toString().endsWith("/") ? "" : "/") + defaulthApiDocsPath);
     }
 
 }

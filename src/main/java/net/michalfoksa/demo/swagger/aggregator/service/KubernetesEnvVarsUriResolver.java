@@ -1,5 +1,9 @@
 package net.michalfoksa.demo.swagger.aggregator.service;
 
+import java.net.URI;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,8 +15,9 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class KubernetesEnvVarsUriResolver implements InitializingBean, UrlResolver
-{
+public class KubernetesEnvVarsUriResolver implements InitializingBean, ServiceUriResolver {
+
+    Logger log = LoggerFactory.getLogger(KubernetesEnvVarsUriResolver.class);
 
     @Value("${service.discovery.client.defaultprototol:http}")
     private String defaultProtocol;
@@ -24,14 +29,8 @@ public class KubernetesEnvVarsUriResolver implements InitializingBean, UrlResolv
         upperCaseDefaultProtocol = defaultProtocol.toUpperCase();
     }
 
-    /***
-     * Create service URI from service name.
-     *
-     * @param serviceName
-     * @return service URI
-     */
     @Override
-    public String getUrl(String serviceName) {
+    public URI getUri(String serviceName) {
 
         /**
          * Service discovery using Kubernetes environment variables. Host
@@ -43,8 +42,11 @@ public class KubernetesEnvVarsUriResolver implements InitializingBean, UrlResolv
         String host = System.getenv(serviceName.toUpperCase() + "_SERVICE_HOST");
         String port = System
                 .getenv(serviceName.toUpperCase() + "_SERVICE_PORT_" + upperCaseDefaultProtocol);
+        URI uri = URI.create(defaultProtocol + "://" + host + ":" + port);
 
-        return defaultProtocol + "://" + host + ":" + port;
+        log.debug("Service name to service URI [serviceName={}, uri={}]", serviceName, uri);
+
+        return uri;
     }
 
 }
