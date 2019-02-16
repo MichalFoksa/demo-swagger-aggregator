@@ -39,9 +39,13 @@ public class KubernetesEnvVarsUriResolver implements InitializingBean, ServiceUr
          * [SERVICE_NAME]_SERVICE_HOST
          * [SERVICE_NAME]_SERVICE_PORT_[PORT_NAME]
          */
-        String host = System.getenv(serviceName.toUpperCase() + "_SERVICE_HOST");
+
+        // Replace dashes with underscore
+        String normalizeServiceName = serviceName.replaceAll("-", "_").toUpperCase();
+
+        String host = System.getenv(normalizeServiceName + "_SERVICE_HOST");
         String port = System
-                .getenv(serviceName.toUpperCase() + "_SERVICE_PORT_" + upperCaseDefaultProtocol);
+                .getenv(normalizeServiceName + "_SERVICE_PORT_" + upperCaseDefaultProtocol);
         URI uri = URI.create(defaultProtocol + "://" + host + ":" + port);
 
         log.debug("Service name to service URI [serviceName={}, uri={}]", serviceName, uri);
