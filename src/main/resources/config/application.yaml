@@ -53,4 +53,4 @@ logging.level.org.apache: WARN
 logging.level.org.apache.tomcat: INFO
 logging.level.org.hibernate: INFO
 logging.level.org.thymeleaf: INFO
-logging.level.net.michalfoksa: DEBUG
+logging.level.net.michalfoksa: TRACE

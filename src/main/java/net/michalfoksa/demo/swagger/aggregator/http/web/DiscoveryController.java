@@ -32,6 +32,8 @@ public class DiscoveryController {
 
     @GetMapping()
     public @ResponseBody String getApplicationInfo() {
+        log.trace("discoveryClient implementation [class={}]", discoveryClient.getClass());
+
         StringBuilder sb = new StringBuilder();
 
         sb.append("<table>\n<tr>");
