@@ -1,4 +1,24 @@
 ################################################################################
+###                     Dependency configuration                             ###
+################################################################################
+spring:
+  cloud:
+    kubernetes:
+      # Kubernetes discovery client
+      discovery:
+        # Enabled by default
+        enabled: false
+
+    discovery:
+      client:
+        simple:
+          instances:
+              bodyshop:
+              - uri: http://localhost:10081/
+              paintshop:
+              - uri: http://localhost:10081/
+
+################################################################################
 ###                      Custom directives                                   ###
 ################################################################################
 
@@ -6,9 +26,9 @@
 ###                       Logging configuration                              ###
 ################################################################################
 # logging.level.org.springframework.web: DEBUG
-logging.level.org.springframework.web.servlet.DispatcherServlet: DEBUG
+# logging.level.org.springframework.web.servlet.DispatcherServlet: DEBUG
 
 # Springfox
-logging.level.springfox.documentation: DEBUG
+# logging.level.springfox.documentation: DEBUG
 
 # Current application
