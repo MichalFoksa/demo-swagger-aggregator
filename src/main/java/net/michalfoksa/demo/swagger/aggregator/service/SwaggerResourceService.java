@@ -62,23 +62,26 @@ public class SwaggerResourceService implements InitializingBean {
      * @return
      */
     public SwaggerResource createResource(String serviceName) {
-        URI apiDocsUri = createApiDocsUri(serviceName);
+        return createApiDocsUri(serviceName).map(apiDocsUri -> {
+            service2ApiDocsUri.put(serviceName, apiDocsUri);
 
-        SwaggerResource swaggerResource = new SwaggerResource();
-        swaggerResource.setName(serviceName);
-        swaggerResource.setUrl(proxyControlerPath + "/" + serviceName);
-        swaggerResource.setSwaggerVersion("2.0");
+            SwaggerResource swaggerResource = new SwaggerResource();
+            swaggerResource.setName(serviceName);
+            swaggerResource.setUrl(proxyControlerPath + "/" + serviceName);
+            swaggerResource.setSwaggerVersion("2.0");
 
-        service2ApiDocsUri.put(serviceName, apiDocsUri);
-
-        log.info("New SwaggerResource created [name={}, localUrl={}, apiDocsUri={}]", swaggerResource.getName(),
-                swaggerResource.getUrl(), apiDocsUri);
-        return swaggerResource;
+            log.info("New SwaggerResource created [name={}, localUrl={}, apiDocsUri={}]", swaggerResource.getName(),
+                    swaggerResource.getUrl(), apiDocsUri);
+            return swaggerResource;
+        }).orElse(null);
     }
 
-    private URI createApiDocsUri(String serviceName) {
+    private Optional<URI> createApiDocsUri(String serviceName) {
         URI uri = serviceUriResolver.getUri(serviceName);
-        return URI.create(uri + (uri.toString().endsWith("/") ? "" : "/") + defaulthApiDocsPath);
+        if (uri == null) {
+            return Optional.empty();
+        }
+        return Optional.of(URI.create(uri + (uri.toString().endsWith("/") ? "" : "/") + defaulthApiDocsPath));
     }
 
 }

@@ -1,6 +1,7 @@
 package net.michalfoksa.demo.swagger.aggregator.service;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public class KubernetesUriResolver implements InitializingBean, ServiceUriResolv
         log.trace("discoveryClient class [class={}]", discoveryClient.getClass());
 
         if (discoveryClient instanceof CompositeDiscoveryClient) {
-            return ((CompositeDiscoveryClient) discoveryClient).getDiscoveryClients();
+            return new ArrayList<>(((CompositeDiscoveryClient) discoveryClient).getDiscoveryClients());
         }
         return Arrays.asList(discoveryClient);
     }

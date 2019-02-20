@@ -7,8 +7,13 @@ spring:
 
   cloud:
     kubernetes:
+      # When enabled (by default) beans KubernetesDiscoveryProperties KubernetesClientServicesFunction 
+      # and DefaultIsServicePortSecureResolver are created. 
+      # Enabled by default
+      enabled: true
       # Kubernetes discovery client
       discovery:
+        # When enabled KubernetesDiscoveryClient is created
         # Enabled by default
         enabled: true
 
