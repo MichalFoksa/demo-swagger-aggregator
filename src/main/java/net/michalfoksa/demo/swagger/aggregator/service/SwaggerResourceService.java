@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import springfox.documentation.swagger.web.SwaggerResource;
 import springfox.documentation.swagger2.web.Swagger2Controller;
 
 @Service
-public class SwaggerResourceService implements InitializingBean {
+public class SwaggerResourceService {
 
     Logger log = LoggerFactory.getLogger(SwaggerResourceService.class);
 
@@ -35,8 +35,8 @@ public class SwaggerResourceService implements InitializingBean {
     // Map of serviceId to api-docs URI
     private Map<String, URI> service2ApiDocsUri = new HashMap<>();
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    @PostConstruct
+    public void init() throws Exception {
         // Strip leading slash if exists
         if (defaulthApiDocsPath.startsWith("/")) {
             defaulthApiDocsPath = defaulthApiDocsPath.substring(1);
