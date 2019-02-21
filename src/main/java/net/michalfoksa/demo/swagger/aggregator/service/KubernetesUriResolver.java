@@ -1,15 +1,16 @@
 package net.michalfoksa.demo.swagger.aggregator.service;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class KubernetesUriResolver implements InitializingBean, ServiceUriResolver {
+public class KubernetesUriResolver implements ServiceUriResolver {
 
     Logger log = LoggerFactory.getLogger(KubernetesUriResolver.class);
 
@@ -36,8 +37,8 @@ public class KubernetesUriResolver implements InitializingBean, ServiceUriResolv
 
     private String upperCaseDefaultProtocol;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    @PostConstruct
+    public void init() throws Exception {
         upperCaseDefaultProtocol = defaultProtocol.toUpperCase();
     }
 
@@ -72,7 +73,7 @@ public class KubernetesUriResolver implements InitializingBean, ServiceUriResolv
         log.trace("discoveryClient class [class={}]", discoveryClient.getClass());
 
         if (discoveryClient instanceof CompositeDiscoveryClient) {
-            return ((CompositeDiscoveryClient) discoveryClient).getDiscoveryClients();
+            return new ArrayList<>(((CompositeDiscoveryClient) discoveryClient).getDiscoveryClients());
         }
         return Arrays.asList(discoveryClient);
     }
