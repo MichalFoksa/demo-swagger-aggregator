@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>net.michalfoksa.demo.swagger</groupId>
 	<artifactId>aggregator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<name>aggregator</name>
 	<description>Discovers micro-services in Kubernetes and aggregates their Swagger APIs</description>
 
