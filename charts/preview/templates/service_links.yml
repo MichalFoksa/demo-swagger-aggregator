@@ -7,8 +7,10 @@ spec:
   type: ExternalName
   # Target service DNS name
   externalName: workstation.jx-staging.svc.cluster.local
-#   ports:
-# - port: 3306
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
 
 ---
 kind: Service
@@ -19,8 +21,10 @@ spec:
   type: ExternalName
   # Target service DNS name
   externalName: bodyshop.jx-staging.svc.cluster.local
-#   ports:
-# - port: 3306
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
 
 ---
 kind: Service
@@ -31,5 +35,7 @@ spec:
   type: ExternalName
   # Target service DNS name
   externalName: paitshop.jx-staging.svc.cluster.local
-#   ports:
-# - port: 3306
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
