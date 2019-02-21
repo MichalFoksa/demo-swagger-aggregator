@@ -30,11 +30,11 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: paitshop-link
+  name: paintshop-link
 spec:
   type: ExternalName
   # Target service DNS name
-  externalName: paitshop.jx-staging.svc.cluster.local
+  externalName: paintshop.jx-staging.svc.cluster.local
   ports:
   - name: http
     protocol: TCP
