@@ -19,9 +19,11 @@ public class SwaggerConfig {
     public SwaggerResourcesProvider swaggerResourcesProvider(DiscoveryClient discoveryClient,
             SwaggerResourceService resourceService) {
 
+        // Return any instance for each service
         return () -> discoveryClient.getServices().stream().sorted(String::compareTo)
-                .map(serviceName -> resourceService.createResource(serviceName)).filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .map(serviceName -> discoveryClient.getInstances(serviceName).stream().findAny()
+                        .map(instance -> resourceService.createResource(instance)).orElse(null))
+                .filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }

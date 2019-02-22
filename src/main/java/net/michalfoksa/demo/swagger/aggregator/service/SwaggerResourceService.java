@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.stereotype.Service;
 
 import net.michalfoksa.demo.swagger.aggregator.http.rest.ApiDocsProxyController;
@@ -28,9 +28,6 @@ public class SwaggerResourceService {
 
     @Value("${aggregator.api-docs-proxy.path:" + ApiDocsProxyController.DEFAULT_PROXY_PATH + "}")
     private String proxyControlerPath;
-
-    @Inject
-    private ServiceUriResolver serviceUriResolver;
 
     // Map of serviceId to api-docs URI
     private Map<String, URI> service2ApiDocsUri = new HashMap<>();
@@ -61,27 +58,25 @@ public class SwaggerResourceService {
      * @param serviceName
      * @return
      */
-    public SwaggerResource createResource(String serviceName) {
-        return createApiDocsUri(serviceName).map(apiDocsUri -> {
-            service2ApiDocsUri.put(serviceName, apiDocsUri);
+    public SwaggerResource createResource(ServiceInstance instance) {
+        String serviceName = instance.getServiceId();
+        URI apiDocsUri = createApiDocsUri(instance);
 
-            SwaggerResource swaggerResource = new SwaggerResource();
-            swaggerResource.setName(serviceName);
-            swaggerResource.setUrl(proxyControlerPath + "/" + serviceName);
-            swaggerResource.setSwaggerVersion("2.0");
+        service2ApiDocsUri.put(serviceName, apiDocsUri);
 
-            log.info("New SwaggerResource created [name={}, localUrl={}, apiDocsUri={}]", swaggerResource.getName(),
-                    swaggerResource.getUrl(), apiDocsUri);
-            return swaggerResource;
-        }).orElse(null);
+        SwaggerResource swaggerResource = new SwaggerResource();
+        swaggerResource.setName(serviceName);
+        swaggerResource.setUrl(proxyControlerPath + "/" + serviceName);
+        swaggerResource.setSwaggerVersion("2.0");
+
+        log.info("New SwaggerResource created [name={}, localUrl={}, apiDocsUri={}]", swaggerResource.getName(),
+                swaggerResource.getUrl(), apiDocsUri);
+        return swaggerResource;
     }
 
-    private Optional<URI> createApiDocsUri(String serviceName) {
-        URI uri = serviceUriResolver.getUri(serviceName);
-        if (uri == null) {
-            return Optional.empty();
-        }
-        return Optional.of(URI.create(uri + (uri.toString().endsWith("/") ? "" : "/") + defaulthApiDocsPath));
+    private URI createApiDocsUri(ServiceInstance instance) {
+        URI uri = instance.getUri();
+        return URI.create(uri + (uri.toString().endsWith("/") ? "" : "/") + defaulthApiDocsPath);
     }
 
 }
