@@ -11,7 +11,7 @@ spring:
       # and DefaultIsServicePortSecureResolver are created. 
       # Enabled by default
       enabled: true
-      # Kubernetes discovery client
+      # Kubernetes discovery client. It comes with spring-cloud-starter-kubernetes.
       discovery:
         # When enabled KubernetesDiscoveryClient is created
         # Disabled so that id does not interfere with "KubernetesServiceDiscoveryClient"
@@ -21,9 +21,10 @@ spring:
 
       # Custom directives from here down
       service:
-        # Kubernetes service discovery client
+        # Kubernetes service discovery client.
         # Discovery client providing methods to retrie Kubernetes services as if 
-        # they were service instances in context of Spring cloud discovery.  
+        # they were service instances in context of Spring cloud discovery.
+        # It is implemented in this application.
         discovery:
           # When enabled KubernetesServiceDiscoveryClient is created
           # Enabled by default

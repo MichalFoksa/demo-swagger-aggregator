@@ -72,7 +72,15 @@ public class KubernetesServiceDiscoveryClient extends KubernetesDiscoveryClient 
     public List<ServiceInstance> getInstances(String serviceId) {
         Assert.notNull(serviceId, "[Assertion failed] - the object argument must not be null");
 
-        return new ArrayList<>(getKubernetesServices());
+        Predicate<Service> filter = (Service instance) -> {
+            if (instance != null && instance.getMetadata() != null && instance.getMetadata().getName() != null
+                    && instance.getMetadata().getName().equals(serviceId)) {
+                return true;
+            }
+            return false;
+        };
+
+        return new ArrayList<>(getKubernetesServices(filter));
     }
 
     public List<KubernetesService> getKubernetesServices() {

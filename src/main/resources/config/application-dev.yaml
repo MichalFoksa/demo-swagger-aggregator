@@ -9,6 +9,7 @@ spring:
         # Enabled by default
         enabled: false
 
+      # Custom directives from here down
       service:
         # Kubernetes service discovery client
         discovery:
