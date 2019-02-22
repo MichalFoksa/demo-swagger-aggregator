@@ -9,6 +9,13 @@ spring:
         # Enabled by default
         enabled: false
 
+      # Custom directives from here down
+      service:
+        # Kubernetes service discovery client
+        discovery:
+          # Enabled by default
+          enabled: true
+
     discovery:
       client:
         simple:
@@ -26,9 +33,9 @@ spring:
 ###                       Logging configuration                              ###
 ################################################################################
 # logging.level.org.springframework.web: DEBUG
-# logging.level.org.springframework.web.servlet.DispatcherServlet: DEBUG
+logging.level.org.springframework.web.servlet.DispatcherServlet: DEBUG
 
 # Springfox
 # logging.level.springfox.documentation: DEBUG
 
-# Current application
+# This application

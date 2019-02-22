@@ -11,11 +11,24 @@ spring:
       # and DefaultIsServicePortSecureResolver are created. 
       # Enabled by default
       enabled: true
-      # Kubernetes discovery client
+      # Kubernetes discovery client. It comes with spring-cloud-starter-kubernetes.
       discovery:
         # When enabled KubernetesDiscoveryClient is created
+        # Disabled so that id does not interfere with "KubernetesServiceDiscoveryClient"
+        # - next section.
         # Enabled by default
-        enabled: true
+        enabled: false
+
+      # Custom directives from here down
+      service:
+        # Kubernetes service discovery client.
+        # Discovery client providing methods to retrie Kubernetes services as if 
+        # they were service instances in context of Spring cloud discovery.
+        # It is implemented in this application.
+        discovery:
+          # When enabled KubernetesServiceDiscoveryClient is created
+          # Enabled by default
+          enabled: true
 
 # Display application name in Actuator's info endpoint 
 info.app.name: ${spring.application.name}
@@ -35,7 +48,6 @@ management:
 ################################################################################
 # API documentation path where aplication defaults when path is not in service metadata
 documentation.swagger.v2.defaultpath: /api-docs
-
 
 aggregator:
   documentation:
