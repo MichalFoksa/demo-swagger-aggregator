@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.michalfoksa.demo.swagger.aggregator.context.RuntimeContext;
-import net.michalfoksa.demo.swagger.aggregator.service.ServiceUriResolver;
 
 @Controller
 @RequestMapping(path = "/discovery")
@@ -27,8 +26,6 @@ public class DiscoveryController {
     @Inject
     private DiscoveryClient discoveryClient;
 
-    @Inject
-    private ServiceUriResolver serviceUriResolver;
 
     @GetMapping()
     public @ResponseBody String getApplicationInfo() {
@@ -50,12 +47,10 @@ public class DiscoveryController {
             String servicesTable =
                     discoveryClient.getServices().stream().sorted(String::compareTo)
                     .map(name -> "<tr><td>Service:</td><th colspan=\"2\">" + name + "</th></tr>\n"
-                            + "<tr><td>service uri:</td><td colspan=\"2\">" + serviceUriResolver.getUri(name)
-                            + "</td></tr>\n"
-                            + "<tr><td colspan=\"3\"> instaces </td></tr>\n"
+                                    + "<tr><th colspan=\"3\"> Instaces </th></tr>\n"
                             + discoveryClient.getInstances(name).stream().map(instance ->
 
-                            "<tr><td> instanceId :</td> <td>" + instance.getInstanceId() + "</td><td/></tr>\n"
+                                    "<tr><td> instanceId :</td> <td>" + instance.getInstanceId() + "</td><td/></tr>\n"
                             + "<tr><td> scheme :</td> <td>" + instance.getScheme() + "</td><td/></tr>\n"
                             + "<tr><td> host :</td> <td>" + instance.getHost() + "</td><td/></tr>\n"
                             + "<tr><td> port :</td> <td>" + instance.getPort() + "</td><td/></tr>\n"
@@ -70,7 +65,7 @@ public class DiscoveryController {
                             .collect(Collectors.joining("</tr>\n<tr>"))
 
                                     ).collect(Collectors.joining("</tr>\n<tr>")))
-                    .collect(Collectors.joining("</tr>\n<tr>"));
+                    .collect(Collectors.joining("</tr>\n<tr></tr>\n<tr>"));
             sb.append(servicesTable);
         } catch (Exception e) {
             sb.append(e.getMessage());
