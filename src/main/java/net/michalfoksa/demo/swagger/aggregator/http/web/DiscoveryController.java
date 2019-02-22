@@ -47,17 +47,17 @@ public class DiscoveryController {
             String servicesTable =
                     discoveryClient.getServices().stream().sorted(String::compareTo)
                     .map(name -> "<tr><td>Service:</td><th colspan=\"2\">" + name + "</th></tr>\n"
-                                    + "<tr><th colspan=\"3\"> Instaces </th></tr>\n"
+                                    + "<tr><th>instaces</th><td/><td/></tr>\n"
                             + discoveryClient.getInstances(name).stream().map(instance ->
 
-                                    "<tr><td> instanceId :</td> <td>" + instance.getInstanceId() + "</td><td/></tr>\n"
+                            "<tr><td> instanceId :</td> <th colspan=\"2\">" + instance.getInstanceId()
+                            + "</th></tr>\n"
                             + "<tr><td> scheme :</td> <td>" + instance.getScheme() + "</td><td/></tr>\n"
                             + "<tr><td> host :</td> <td>" + instance.getHost() + "</td><td/></tr>\n"
                             + "<tr><td> port :</td> <td>" + instance.getPort() + "</td><td/></tr>\n"
                             + "<tr><td> uri :</td> <td>" + instance.getUri() + "</td><td/></tr>\n"
                             // Metadata
-                            + "<tr><th>metadata</th><th colspan=\"2\"> instance " + instance.getInstanceId()
-                            + " </th></tr>\n"
+                            + "<tr><th>metadata</th><td colspan=\"2\"></td></tr>\n"
                             + instance.getMetadata().entrySet().stream()
                             .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
                             .map(entry -> "<td/><td>" + entry.getKey() + ":</td> <td>"
