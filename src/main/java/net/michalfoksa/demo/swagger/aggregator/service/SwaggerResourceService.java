@@ -23,10 +23,10 @@ public class SwaggerResourceService {
     Logger log = LoggerFactory.getLogger(SwaggerResourceService.class);
 
     // Default to Swagger2Controller.DEFAULT_URL
-    @Value("${aggregator.documentation.swagger.v2.defaultpath:" + Swagger2Controller.DEFAULT_URL + "}")
+    @Value("${aggregator.polling.defaultPath:" + Swagger2Controller.DEFAULT_URL + "}")
     private String defaulthApiDocsPath;
 
-    @Value("${aggregator.api-docs-proxy.path:" + ApiDocsProxyController.DEFAULT_PROXY_PATH + "}")
+    @Value("${aggregator.proxyPath:" + ApiDocsProxyController.DEFAULT_PROXY_PATH + "}")
     private String proxyControlerPath;
 
     // Map of serviceId to api-docs URI

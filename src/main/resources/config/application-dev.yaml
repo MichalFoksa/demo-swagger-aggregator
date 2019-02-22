@@ -22,8 +22,12 @@ spring:
           instances:
               bodyshop:
               - uri: http://localhost:10081/
+                metadata:
+                  "[swagger.io/apidocs/poll]": true
               paintshop:
               - uri: http://localhost:10081/
+                metadata:
+                  "[swagger.io/apidocs/poll]": false
 
 ################################################################################
 ###                      Custom directives                                   ###

@@ -46,20 +46,35 @@ management:
 ################################################################################
 ###                      Custom directives                                   ###
 ################################################################################
-# API documentation path where aplication defaults when path is not in service metadata
-documentation.swagger.v2.defaultpath: /api-docs
-
 aggregator:
-  documentation:
-    # Default path to Swagger API documentation in JSON format. On client side 
-    # it is configured by: 
-    #    documentation.swagger.v2.defaultpath and defualts to /v2/api-docs   
-    # Aplication defaults to this when path is not in service metadata.
-    # Default value: /v2/api-docs
-    swagger.v2.defaultpath: /api-docs
+  # Path to local reverse proxy controller 
+  proxyPath: /api-docs/proxy
 
-    # Path to 
-    api-docs-proxy.path: /api-docs/proxy
+  polling:
+    #   Default path to Swagger API documentation in JSON format. It sets
+    # default value to `swagger.io/apidocs/path` service annotation i.e.: 
+    # aggregator defaults to this value when polling path is not in a service
+    # metadata.
+    #   On client side it is configured by `springfox.documentation.swagger.v2.path`
+    # and defaults to `/v2/api-docs`.
+    #   Default value: `/v2/api-docs`
+    defaultPath: /api-docs
+
+    # Annotation prefix used to configure apidocs endpoint for polling. 
+    # Default value: `swagger.io/apidocs`
+    annotationPrefix: swagger.io/apidocs
+
+    #   Actual apidocs service endpoint can be configured via the following
+    # annotations, assumming `swagger.io/apidocs` annotation prefix:
+    #
+    # * `swagger.io/apidocs/poll`: Poll services that have a value of `true`.
+    # Default `false`.
+    # * `swagger.io/apidocs/scheme`: Service URI scheme by default.
+    # * `swagger.io/apidocs/path`: `/v2/api-docs` by default.
+    # * `swagger.io/apidocs/port`: Service URI port by default. Set this
+    # appropriately if the apidocs is exposed on a different port to the
+    # service URI.
+    # * `swagger.io/apidocs/version`: Swagger version. `2.0` by default.
 
 ################################################################################
 ###                       Logging configuration                              ###
@@ -70,6 +85,5 @@ logging.level.org.springframework.cloud: DEBUG
 logging.level.springfox: WARN
 logging.level.org.apache: WARN
 logging.level.org.apache.tomcat: INFO
-logging.level.org.hibernate: INFO
 logging.level.org.thymeleaf: INFO
 logging.level.net.michalfoksa: TRACE
