@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package net.michalfoksa.cloud.kubernetes.discovery;
 
 import java.net.URI;

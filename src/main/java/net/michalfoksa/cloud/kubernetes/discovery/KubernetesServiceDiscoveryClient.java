@@ -14,15 +14,19 @@
  * limitations under the License.
  *
  */
-
 package net.michalfoksa.cloud.kubernetes.discovery;
+
+import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.kubernetes.discovery.KubernetesClientServicesFunction;
 import org.springframework.cloud.kubernetes.discovery.KubernetesDiscoveryClient;
@@ -31,6 +35,7 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServicePort;
@@ -47,8 +52,9 @@ import io.fabric8.kubernetes.client.KubernetesClient;
  */
 public class KubernetesServiceDiscoveryClient extends KubernetesDiscoveryClient {
 
-    private final KubernetesDiscoveryProperties properties;
+    private static final Log log = LogFactory.getLog(KubernetesServiceDiscoveryClient.class);
 
+    private final KubernetesDiscoveryProperties properties;
     private final KubernetesClientServicesFunction kubernetesClientServicesFunction;
     private final SpelExpressionParser parser = new SpelExpressionParser();
     private final SimpleEvaluationContext evalCtxt = SimpleEvaluationContext.forReadOnlyDataBinding()
@@ -104,12 +110,73 @@ public class KubernetesServiceDiscoveryClient extends KubernetesDiscoveryClient 
     public List<KubernetesService> getKubernetesServices(Predicate<Service> filter) {
         return kubernetesClientServicesFunction.apply(getClient()).list().getItems().stream()
                 .filter(filter).map(s -> {
+
+                    final Map<String, String> serviceMetadata = new HashMap<>();
+                    KubernetesDiscoveryProperties.Metadata metadataProps = properties.getMetadata();
+
+                    if (metadataProps.isAddLabels()) {
+                        Map<String, String> labelMetadata = prefixMapKeys(s.getMetadata().getLabels(),
+                                metadataProps.getLabelsPrefix());
+                        if (log.isDebugEnabled()) {
+                            log.debug("Adding label metadata: " + labelMetadata);
+                        }
+                        serviceMetadata.putAll(labelMetadata);
+                    }
+
+                    if (metadataProps.isAddAnnotations()) {
+                        Map<String, String> annotationMetadata = prefixMapKeys(
+                                s.getMetadata().getAnnotations(), metadataProps.getAnnotationsPrefix());
+                        if (log.isDebugEnabled()) {
+                            log.debug("Adding annotation metadata: " + annotationMetadata);
+                        }
+                        serviceMetadata.putAll(annotationMetadata);
+                    }
+
+                    // Extend the service metadata map with per port information
+                    // (if requested)
+                    if (metadataProps.isAddPorts()) {
+                        Map<String, String> ports = s.getSpec().getPorts().stream()
+                                .filter(port -> !StringUtils.isEmpty(port.getName()))
+                                .collect(toMap(ServicePort::getName, port -> Integer.toString(port.getPort())));
+                        Map<String, String> portsMetadata = prefixMapKeys(ports, metadataProps.getPortsPrefix());
+                        if (log.isDebugEnabled()) {
+                            log.debug("Adding port metadata: " + portsMetadata);
+                        }
+                        serviceMetadata.putAll(portsMetadata);
+                    }
+
                     ServicePort port = s.getSpec().getPorts().stream().findFirst().orElseThrow(IllegalStateException::new);
-                    s.getMetadata().getNamespace();
                     return new KubernetesService(s.getMetadata().getName(), s.getMetadata().getNamespace(),
                             s.getSpec().getType(), s.getSpec().getClusterIP(), s.getSpec().getExternalName(), port,
-                            new HashMap<String, String>(), false);
+                            serviceMetadata, false);
                 }).collect(Collectors.toList());
+    }
+
+    /***
+     * Returns a new map that contain all the entries of the original map but
+     * all keys are prefixed by the <code>prefix</code>
+     *
+     * If the prefix is null or empty, the map itself is returned (unchanged of
+     * course)
+     *
+     * @param map
+     * @param prefix
+     * @return
+     */
+    private Map<String, String> prefixMapKeys(Map<String, String> map, String prefix) {
+        if (map == null) {
+            return new HashMap<>();
+        }
+
+        // when the prefix is empty just return an map with the same entries
+        if (!StringUtils.hasText(prefix)) {
+            return map;
+        }
+
+        final Map<String, String> result = new HashMap<>();
+        map.forEach((k, v) -> result.put(prefix + k, v));
+
+        return result;
     }
 
 }
