@@ -47,33 +47,38 @@ management:
 ###                      Custom directives                                   ###
 ################################################################################
 aggregator:
-  # Path to local reverse proxy controller 
+  # Path to local reverse proxy controller
+  # Default value: `/api-docs/proxy`
   proxyPath: /api-docs/proxy
 
-  polling:
+  # ApiDocs enpoint configuration.
+  endpoint:
     #   Default path to Swagger API documentation in JSON format. It sets
-    # default value to `swagger.io/apidocs/path` service annotation i.e.: 
-    # aggregator defaults to this value when polling path is not in a service
+    # default value to `swagger.io/apidocs/path` service annotation i.e.:
+    # aggregator defaults to this value when endpoint path is not in a service
     # metadata.
     #   On client side it is configured by `springfox.documentation.swagger.v2.path`
     # and defaults to `/v2/api-docs`.
     #   Default value: `/v2/api-docs`
     defaultPath: /api-docs
 
-    # Annotation prefix used to configure apidocs endpoint for polling. 
+    # Annotation prefix used to configure ApiDocs endpoint for polling.
     # Default value: `swagger.io/apidocs`
     annotationPrefix: swagger.io/apidocs
 
-    #   Actual apidocs service endpoint can be configured via the following
+    #   Actual ApiDocs service endpoint can be configured via the following
     # annotations, assumming `swagger.io/apidocs` annotation prefix:
     #
     # * `swagger.io/apidocs/poll`: Poll services that have a value of `true`.
     # Default `false`.
-    # * `swagger.io/apidocs/scheme`: Service URI scheme by default.
-    # * `swagger.io/apidocs/path`: `/v2/api-docs` by default.
+    # * `swagger.io/apidocs/scheme`: By default scheme from service URI.
+    # * `swagger.io/apidocs/host`: Service URI host by default. Set this
+    # appropriately if ApiDocs is exposed on a different host to the service
+    # URI. It is usefull when a service is exposed via an ingress controller.
     # * `swagger.io/apidocs/port`: Service URI port by default. Set this
-    # appropriately if the apidocs is exposed on a different port to the
-    # service URI.
+    # appropriately if ApiDocs is exposed on a different port to the service
+    # URI.
+    # * `swagger.io/apidocs/path`: `/v2/api-docs` by default.
     # * `swagger.io/apidocs/version`: Swagger version. `2.0` by default.
 
 ################################################################################
