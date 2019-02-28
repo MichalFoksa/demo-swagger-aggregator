@@ -33,7 +33,7 @@ public class KubernetesService implements ServiceInstance {
     private static final String COLN = ":";
 
     private final String type;
-    private final String serviceId;
+    private final String name;
     private final String namespace;
     private final String clusterIP;
     private final String externalName;
@@ -42,7 +42,7 @@ public class KubernetesService implements ServiceInstance {
     private final Map<String, String> metadata;
 
 
-    public KubernetesService(String serviceId, String namespace, String type, String clusterIP, String externalName,
+    public KubernetesService(String name, String namespace, String type, String clusterIP, String externalName,
             ServicePort servicePort, Map<String, String> metadata, Boolean secure) {
 
         Assert.hasText(type, "[Assertion failed] - type must not be null or empty");
@@ -51,7 +51,7 @@ public class KubernetesService implements ServiceInstance {
             throw new NullPointerException("clusterIP or externalName must not be empty");
         }
 
-        this.serviceId = serviceId;
+        this.name = name;
         this.namespace = namespace;
         this.type = type;
         this.clusterIP = clusterIP;
@@ -61,14 +61,18 @@ public class KubernetesService implements ServiceInstance {
         this.secure = secure;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String getServiceId() {
-        return serviceId;
+        return name;
     }
 
     @Override
     public String getInstanceId() {
-        return namespace + "/" + serviceId;
+        return (namespace != null ? namespace + "/" : "") + name;
     }
 
     @Override
@@ -76,7 +80,6 @@ public class KubernetesService implements ServiceInstance {
         if ("ClusterIP".equals(type)) {
             return clusterIP;
         }
-
         return externalName;
     }
 
@@ -106,6 +109,22 @@ public class KubernetesService implements ServiceInstance {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getClusterIP() {
+        return clusterIP;
+    }
+
+    public String getExternalName() {
+        return externalName;
     }
 
     @Override

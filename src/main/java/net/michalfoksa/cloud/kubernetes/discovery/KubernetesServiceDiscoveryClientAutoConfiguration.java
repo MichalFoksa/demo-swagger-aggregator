@@ -44,8 +44,8 @@ public class KubernetesServiceDiscoveryClientAutoConfiguration {
             KubernetesDiscoveryProperties properties,
             KubernetesClientServicesFunction kubernetesClientServicesFunction) {
 
-        if (log.isErrorEnabled()) {
-            log.error("Creatting KubernetesServiceDiscoveryClient !!!!");
+        if (log.isInfoEnabled()) {
+            log.info("Creatting KubernetesServiceDiscoveryClient");
         }
 
         return new KubernetesServiceDiscoveryClient(client, properties, kubernetesClientServicesFunction);

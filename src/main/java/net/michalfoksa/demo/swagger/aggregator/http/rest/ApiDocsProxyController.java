@@ -32,7 +32,7 @@ public class ApiDocsProxyController {
 
     Logger log = LoggerFactory.getLogger(ApiDocsProxyController.class);
 
-    @Value("${aggregator.api-docs-proxy.path:" + ApiDocsProxyController.DEFAULT_PROXY_PATH + "}")
+    @Value("${aggregator.proxyPath:" + ApiDocsProxyController.DEFAULT_PROXY_PATH + "}")
     private String proxyControlerPath;
 
     @Inject

@@ -6,39 +6,63 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import net.michalfoksa.demo.swagger.aggregator.http.rest.ApiDocsProxyController;
 import springfox.documentation.swagger.web.SwaggerResource;
-import springfox.documentation.swagger2.web.Swagger2Controller;
 
 @Service
 public class SwaggerResourceService {
 
-    Logger log = LoggerFactory.getLogger(SwaggerResourceService.class);
+    private static final Logger log = LoggerFactory.getLogger(SwaggerResourceService.class);
 
-    // Default to Swagger2Controller.DEFAULT_URL
-    @Value("${aggregator.documentation.swagger.v2.defaultpath:" + Swagger2Controller.DEFAULT_URL + "}")
-    private String defaulthApiDocsPath;
+    private static final String SCHEME_SUFFIX = "/scheme";
+    private static final String PORT_SUFFIX = "/port";
+    private static final String HOST_SUFFIX = "/host";
+    private static final String PATH_SUFFIX = "/path";
+    private static final String VERSION_SUFFIX = "/version";
+    private static final String DEFAULT_SWAGGER_VERSION = "2.0";
 
-    @Value("${aggregator.api-docs-proxy.path:" + ApiDocsProxyController.DEFAULT_PROXY_PATH + "}")
-    private String proxyControlerPath;
+    @Inject
+    private SwaggerAggregatorProperties properties;
+
+    // Default path to apidocs on a remote host with leading slash.
+    private String defaultPath;
+
+    // Path to reverse proxy controller
+    private String proxyPath;
+
+    // Annotation prefix for an endpoint configuration. It is concatenation of
+    // Kubernetes discovery annotation prefix and aggregator's polling
+    // annotation prefix.
+    private String annotationPrefix;
 
     // Map of serviceId to api-docs URI
     private Map<String, URI> service2ApiDocsUri = new HashMap<>();
 
     @PostConstruct
     public void init() throws Exception {
-        // Strip leading slash if exists
-        if (defaulthApiDocsPath.startsWith("/")) {
-            defaulthApiDocsPath = defaulthApiDocsPath.substring(1);
+        annotationPrefix = properties.getEndpoint().getAnnotationPrefix();
+
+        // Add leading slash if not set
+        defaultPath = properties.getEndpoint().getDefaultPath();
+        if (!defaultPath.startsWith("/")) {
+            defaultPath = "/" + defaultPath;
         }
-        log.info("[defaulthApiDocsPath={}, proxyControlerPath={}]", defaulthApiDocsPath, proxyControlerPath);
+
+        // Add leading slash if not set
+        proxyPath = properties.getProxyPath();
+        if (!proxyPath.startsWith("/")) {
+            proxyPath = "/" + proxyPath;
+        }
+
+        log.info("[defaultPath={}, proxyPath={}, annotationPrefix={}]", defaultPath, proxyPath, annotationPrefix);
     }
 
     /***
@@ -66,8 +90,10 @@ public class SwaggerResourceService {
 
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(serviceName);
-        swaggerResource.setUrl(proxyControlerPath + "/" + serviceName);
-        swaggerResource.setSwaggerVersion("2.0");
+        swaggerResource.setUrl(proxyPath + "/" + serviceName);
+
+        String version = instance.getMetadata().get(annotationPrefix + VERSION_SUFFIX);
+        swaggerResource.setSwaggerVersion(version != null? version : DEFAULT_SWAGGER_VERSION);
 
         log.info("New SwaggerResource created [name={}, localUrl={}, apiDocsUri={}]", swaggerResource.getName(),
                 swaggerResource.getUrl(), apiDocsUri);
@@ -75,8 +101,32 @@ public class SwaggerResourceService {
     }
 
     private URI createApiDocsUri(ServiceInstance instance) {
-        URI uri = instance.getUri();
-        return URI.create(uri + (uri.toString().endsWith("/") ? "" : "/") + defaulthApiDocsPath);
+        Map<String, String> metadata = instance.getMetadata();
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(instance.getUri());
+
+        String scheme = metadata.get(annotationPrefix + SCHEME_SUFFIX);
+        if (!StringUtils.isEmpty(scheme)) {
+            uriBuilder.scheme(scheme);
+        }
+
+        String host = metadata.get(annotationPrefix + HOST_SUFFIX);
+        if (!StringUtils.isEmpty(host)) {
+            uriBuilder.host(host);
+        }
+
+        String port = metadata.get(annotationPrefix + PORT_SUFFIX);
+        if (!StringUtils.isEmpty(port)) {
+            uriBuilder.port(port);
+        }
+
+        String path = metadata.get(annotationPrefix + PATH_SUFFIX);
+        if (!StringUtils.isEmpty(path)) {
+            uriBuilder.path(path);
+        } else {
+            uriBuilder.path(defaultPath);
+        }
+
+        return uriBuilder.build().toUri();
     }
 
 }
