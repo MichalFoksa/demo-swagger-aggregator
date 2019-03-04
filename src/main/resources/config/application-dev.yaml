@@ -23,15 +23,15 @@ spring:
               1-local-bodyshop:
               - uri: http://localhost:10081/
                 metadata:
-                  "[swagger.io/apidocs/poll]": true
-                  "[swagger.io/apidocs/host]": 127.0.0.1
-                  # "[swagger.io/apidocs/port]": 10080
-                  # "[swagger.io/apidocs/path]": /not-existing
+                  "[swagger.io/apidocs.poll]": true
+                  "[swagger.io/apidocs.host]": 127.0.0.1
+                  # "[swagger.io/apidocs.port]": 10080
+                  # "[swagger.io/apidocs.path]": /not-existing
 
               2-local-paintshop:
               - uri: http://localhost:10081/
                 metadata:
-                  "[swagger.io/apidocs/poll]": false
+                  "[swagger.io/apidocs.poll]": false
 
 ################################################################################
 ###                      Custom directives                                   ###

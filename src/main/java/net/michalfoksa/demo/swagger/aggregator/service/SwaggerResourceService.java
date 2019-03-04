@@ -22,12 +22,13 @@ public class SwaggerResourceService {
 
     private static final Logger log = LoggerFactory.getLogger(SwaggerResourceService.class);
 
-    private static final String SCHEME_SUFFIX = "/scheme";
-    private static final String PORT_SUFFIX = "/port";
-    private static final String HOST_SUFFIX = "/host";
-    private static final String PATH_SUFFIX = "/path";
-    private static final String VERSION_SUFFIX = "/version";
-    private static final String DEFAULT_SWAGGER_VERSION = "2.0";
+    public static final String POLL_SUFFIX = ".poll";
+    public static final String SCHEME_SUFFIX = ".scheme";
+    public static final String PORT_SUFFIX = ".port";
+    public static final String HOST_SUFFIX = ".host";
+    public static final String PATH_SUFFIX = ".path";
+    public static final String VERSION_SUFFIX = ".version";
+    public static final String DEFAULT_SWAGGER_VERSION = "2.0";
 
     @Inject
     private SwaggerAggregatorProperties properties;
