@@ -60,7 +60,7 @@ aggregator:
     #   On client side it is configured by `springfox.documentation.swagger.v2.path`
     # and defaults to `/v2/api-docs`.
     #   Default value: `/v2/api-docs`
-    defaultPath: /api-docs
+    defaultPath: /v2/api-docs
 
     # Annotation prefix used to configure ApiDocs endpoint for polling.
     # Default value: `swagger.io/apidocs`
