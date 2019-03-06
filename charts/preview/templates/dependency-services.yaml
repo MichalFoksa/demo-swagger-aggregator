@@ -3,6 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: workstation-link
+  annotations:
+    swagger.io/apidocs.path: /api-docs
+    swagger.io/apidocs.poll: "true"
 spec:
   type: ExternalName
   # Target service DNS name
@@ -17,6 +20,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: bodyshop-link
+  annotations:
+    swagger.io/apidocs.path: /api-docs
+    swagger.io/apidocs.poll: "true"
 spec:
   type: ExternalName
   # Target service DNS name
@@ -31,6 +37,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: paintshop-link
+  annotations:
+    swagger.io/apidocs.path: /api-docs
+    swagger.io/apidocs.poll: "true"
 spec:
   type: ExternalName
   # Target service DNS name
