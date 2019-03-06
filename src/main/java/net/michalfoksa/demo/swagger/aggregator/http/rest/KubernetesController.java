@@ -20,7 +20,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 @RequestMapping("/kubernetes")
 public class KubernetesController {
 
-    Logger log = LoggerFactory.getLogger(KubernetesController.class);
+    private static final Logger log = LoggerFactory.getLogger(KubernetesController.class);
 
     @Inject
     private KubernetesClient client;
