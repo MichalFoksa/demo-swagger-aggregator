@@ -9,6 +9,18 @@ spring:
         # Enabled by default
         enabled: false
 
+        ###############################################################################################################
+        ###                Filter examples in Spring Expression Language (SpEL)                                     ###
+        ### See: https://docs.spring.io/spring/docs/4.3.10.RELEASE/spring-framework-reference/html/expressions.html ###
+        ### and https://dzone.com/articles/learn-spring-expression-language-with-examples                           ###
+        ###############################################################################################################
+        # Return service called bodyshop
+        # filter: metadata.name == 'bodyshop'
+        # Return service name end with 'shop'
+        # filter: metadata.name matches '.*shop'
+        # Return services where annotation "swagger.io/apidocs.poll == true".
+        # filter: metadata.annotations['swagger.io/apidocs.poll'] == 'true'
+
       # Custom directives from here down
       service:
         # Kubernetes service discovery client
@@ -23,15 +35,16 @@ spring:
               1-local-bodyshop:
               - uri: http://localhost:10081/
                 metadata:
-                  "[swagger.io/apidocs/poll]": true
-                  "[swagger.io/apidocs/host]": 127.0.0.1
-                  # "[swagger.io/apidocs/port]": 10080
-                  # "[swagger.io/apidocs/path]": /not-existing
+                  "[swagger.io/apidocs.poll]": true
+                  "[swagger.io/apidocs.host]": 127.0.0.1
+                  # "[swagger.io/apidocs.port]": 10080
+                  "[swagger.io/apidocs.path]": /api-docs
 
               2-local-paintshop:
               - uri: http://localhost:10081/
                 metadata:
-                  "[swagger.io/apidocs/poll]": false
+                  "[swagger.io/apidocs.poll]": true
+                  "[swagger.io/apidocs.path]": /api-docs
 
 ################################################################################
 ###                      Custom directives                                   ###

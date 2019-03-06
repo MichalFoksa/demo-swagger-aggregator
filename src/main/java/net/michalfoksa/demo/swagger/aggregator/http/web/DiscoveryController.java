@@ -18,7 +18,7 @@ import net.michalfoksa.demo.swagger.aggregator.context.RuntimeContext;
 @RequestMapping(path = "/discovery")
 public class DiscoveryController {
 
-    Logger log = LoggerFactory.getLogger(DiscoveryController.class);
+    private static final Logger log = LoggerFactory.getLogger(DiscoveryController.class);
 
     @Inject
     private RuntimeContext runtimeContext;
@@ -47,7 +47,7 @@ public class DiscoveryController {
             String servicesTable =
                     discoveryClient.getServices().stream().sorted(String::compareTo)
                     .map(name -> "<tr><td>Service:</td><th colspan=\"2\">" + name + "</th></tr>\n"
-                                    + "<tr><th>instaces</th><td/><td/></tr>\n"
+                            + "<tr><th>instaces</th><td/><td/></tr>\n"
                             + discoveryClient.getInstances(name).stream().map(instance ->
 
                             "<tr><td> instanceId :</td> <th colspan=\"2\">" + instance.getInstanceId()

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/discovery")
 public class SpringCloudDiscoveryController {
 
-    Logger log = LoggerFactory.getLogger(SpringCloudDiscoveryController.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringCloudDiscoveryController.class);
 
     @Inject
     private DiscoveryClient client;

@@ -24,6 +24,10 @@ public class SwaggerAggregatorProperties {
     }
 
     public void setProxyPath(String proxyPath) {
+        // Strip trailing lash if exists
+        if (proxyPath.endsWith("/")) {
+            proxyPath = proxyPath.substring(0, proxyPath.length() - 1);
+        }
         this.proxyPath = proxyPath;
     }
 
