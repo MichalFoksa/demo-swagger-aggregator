@@ -1,9 +1,8 @@
 package net.michalfoksa.demo.swagger.aggregator.config;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -18,24 +17,28 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 @Configuration
 public class SwaggerConfig {
 
-    @Inject
-    private SwaggerAggregatorProperties aggregatorProperties;
-
     @Primary
     @Bean
     public SwaggerResourcesProvider swaggerResourcesProvider(DiscoveryClient discoveryClient,
-            SwaggerResourceService resourceService) {
+            Predicate<ServiceInstance> pollFilter, SwaggerResourceService resourceService) {
 
-        // Return any instance for each service
+        // Return any instance of each service
         return () -> discoveryClient.getServices().stream().sorted(String::compareTo)
+                // Convert service name to service instance and filter those
+                // where documentation polling is enabled by an annotation (most
+                // likely "swagger.io/apidocs.poll").
                 .map(serviceName -> discoveryClient.getInstances(serviceName).stream()
-                        .filter(this::isPollingEligible).findAny()
-                        .map(instance -> resourceService.createResource(instance)).orElse(null))
-                .filter(Objects::nonNull).collect(Collectors.toList());
+                        .filter(pollFilter).findAny()
+                        .orElse(null))
+                .filter(Objects::nonNull)
+                // Convert service instance to Swagger resource
+                .map(resourceService::createResource)
+                .collect(Collectors.toList());
     }
 
-    private boolean isPollingEligible(ServiceInstance instance) {
-        return "true".equals(instance.getMetadata()
+    @Bean
+    public Predicate<ServiceInstance> pollFilter(SwaggerAggregatorProperties aggregatorProperties) {
+        return (instance) -> "true".equals(instance.getMetadata()
                 .get(aggregatorProperties.getEndpoint().getAnnotationPrefix() + SwaggerResourceService.POLL_SUFFIX));
     }
 
